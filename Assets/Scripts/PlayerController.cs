@@ -19,9 +19,12 @@ public class PlayerController : MonoBehaviour
     private Vector2 lookInput;
     private Vector2 moveInput;
     public float lookSensitivity = 2f;
+
+    private Animator animator;
     private void Start()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -35,6 +38,14 @@ public class PlayerController : MonoBehaviour
         cameraRotation.x -= lookInput.y * lookSensitivity;
         cameraRotation.x = Mathf.Clamp(cameraRotation.x, -90f, 90f); // Limit camera pitch
         cameraTransform.localEulerAngles = cameraRotation;
+    }
+
+    public void TriggerJumpAnimation()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("Jump"); // Trigger jump animation
+        }
     }
 
     public void processMove(Vector2 input)

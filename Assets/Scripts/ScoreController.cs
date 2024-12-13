@@ -9,7 +9,7 @@ public class ScoreController : MonoBehaviour
 {
     public TextMeshProUGUI playerAScoreText;
     public TextMeshProUGUI playerBScoreText;
-   
+    [SerializeField] private PlayerController playerController;
 
     private int playerAScore = 0;
     private int playerBScore = 0;
@@ -68,6 +68,8 @@ public class ScoreController : MonoBehaviour
             GameManager.PlayerBScore = playerBScore;
             Debug.Log("Player score");
             SoundManager.Instance.Play(Sounds.Score);
+
+            playerController?.TriggerJumpAnimation();
 
             // Check win condition
             if (GameManager.PlayerBScore >= winningScore)
