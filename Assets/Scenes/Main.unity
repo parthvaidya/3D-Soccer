@@ -7297,8 +7297,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 1750891454}
   moveSpeed: 5
+  maxPatrolSpeed: 7
   patrolRange: 5
   goalCenter: {fileID: 2026391364}
+  predictionFactor: 0.5
+--- !u!4 &966476990 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 647510253368560022, guid: a9ca23b685b62e94e84d2035d0cf417d, type: 3}
+  m_PrefabInstance: {fileID: 966476985}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1071337492 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 631475601059415042, guid: a9ca23b685b62e94e84d2035d0cf417d, type: 3}
@@ -7318,6 +7325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 1750891454}
   goalPost: {fileID: 441412311}
+  goalkeeper: {fileID: 966476990}
   moveSpeed: 5
   shootForce: 20
   detectionRange: 3
@@ -9827,7 +9835,7 @@ MonoBehaviour:
   playerAScoreText: {fileID: 684076162}
   playerBScoreText: {fileID: 315193028}
   playerController: {fileID: 1681522742}
-  winningScore: 2
+  winningScore: 5
 --- !u!4 &1922092225
 Transform:
   m_ObjectHideFlags: 0

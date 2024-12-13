@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class GoalKeeper : MonoBehaviour
 {
-    public Transform ball; // Assign the ball in the Inspector
-    public float moveSpeed = 5f; // Speed of the goalkeeper
-    public float patrolRange = 5f; // Range within which the goalkeeper moves
-    public Transform goalCenter; // Center of the goal to patrol around
+    
+
+    public Transform ball;
+    public float moveSpeed = 5f;
+    public float maxPatrolSpeed = 7f;
+    public float patrolRange = 5f;
+    public Transform goalCenter;
+    public float predictionFactor = 0.5f; // How far ahead to predict the ball's movement
 
     private Vector3 startPosition;
 
     private void Start()
     {
-        // Save the starting position to patrol around it
         startPosition = transform.position;
     }
 
@@ -23,28 +26,43 @@ public class GoalKeeper : MonoBehaviour
 
         float ballDistance = Vector3.Distance(ball.position, transform.position);
 
-        // If the ball is close, move towards it to block
-        if (ballDistance < 8f) // Adjust this range as needed
+        if (ballDistance < 10f) // Adjust for when the ball gets close
         {
-            Vector3 directionToBall = (ball.position - transform.position).normalized;
-            Vector3 targetPosition = transform.position + directionToBall * moveSpeed * Time.deltaTime;
-
-            // Restrict movement within patrol range
-            targetPosition.x = Mathf.Clamp(targetPosition.x, startPosition.x - patrolRange, startPosition.x + patrolRange);
-            targetPosition.z = Mathf.Clamp(targetPosition.z, startPosition.z - patrolRange, startPosition.z + patrolRange);
-
-            transform.position = targetPosition;
+            PredictAndBlock();
         }
         else
         {
-            // If the ball is far, patrol around the goal
             PatrolGoalArea();
         }
     }
 
+    private void PredictAndBlock()
+    {
+        Rigidbody ballRb = ball.GetComponent<Rigidbody>();
+        Vector3 predictedPosition = ball.position;
+
+        // Predict the ball's future position
+        if (ballRb != null)
+        {
+            predictedPosition += ballRb.velocity * predictionFactor;
+        }
+
+        Vector3 directionToBall = (predictedPosition - transform.position).normalized;
+        Vector3 targetPosition = transform.position + directionToBall * moveSpeed * Time.deltaTime;
+
+        // Preserve the original Y position
+        targetPosition.y = startPosition.y;
+
+        // Clamp movement within patrol range
+        targetPosition.x = Mathf.Clamp(targetPosition.x, startPosition.x - patrolRange, startPosition.x + patrolRange);
+        targetPosition.z = Mathf.Clamp(targetPosition.z, startPosition.z - patrolRange, startPosition.z + patrolRange);
+
+        transform.position = targetPosition;
+    }
+
     private void PatrolGoalArea()
     {
-        float patrolSpeed = moveSpeed * 0.5f; // Slower patrol speed
+        float patrolSpeed = Mathf.Lerp(moveSpeed, maxPatrolSpeed, 0.5f); // Dynamic patrol speed
         Vector3 patrolTarget = new Vector3(
             startPosition.x + Mathf.PingPong(Time.time * patrolSpeed, patrolRange * 2) - patrolRange,
             startPosition.y,

@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
 
     public float shootForce = 10f;
+    public float pushBackForce = 1f;
 
     public Transform cameraTransform; // Assign the main camera's transform in the inspector
     public Transform shootPoint; // Point from where the player shoots the ball
@@ -85,6 +86,20 @@ public class PlayerController : MonoBehaviour
                 // Apply force to the ball
                 ballRb.AddForce(shootDirection * shootForce, ForceMode.Impulse);
                 SoundManager.Instance.Play(Sounds.Ball);
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ball"))
+        {
+            // Apply a small force to push the player back
+            Rigidbody ballRb = collision.gameObject.GetComponent<Rigidbody>();
+            if (ballRb != null)
+            {
+                Vector3 pushDirection = (transform.position - collision.transform.position).normalized;
+                ballRb.AddForce(pushDirection * pushBackForce, ForceMode.Impulse);
             }
         }
     }
