@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GoalKeeper : MonoBehaviour
+public class GoalKeeperOpponent : MonoBehaviour
 {
     
 
